@@ -1,49 +1,45 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 import SVGComponent from 'svg/svgviewer-react-output (1)';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 
-export class Sesrchbar extends Component {
-  state = {
-    searchString: '',
+export const Sesrchbar = props => {
+  const [searchString, setSearchString] = useState('');
+
+  const handleChangeInput = e => {
+    setSearchString(e.currentTarget.value);
   };
 
-  handleChangeInput = e => {
-    this.setState({ searchString: e.currentTarget.value });
-  };
-
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
 
-    if (!this.state.searchString) {
+    if (!searchString) {
       toast('Please fill in your input!');
       return;
     }
-    this.props.onSubmit(this.state.searchString);
-    this.setState({ searchString: '' });
+    props.onSubmit(searchString);
+    setSearchString('');
   };
 
-  render() {
-    const { searchString } = this.state;
-    return (
-      <Searchbar>
-        <Header onSubmit={this.handleSubmit}>
-          <ButtonSearch type="submit">
-            <SVGComponent />
-          </ButtonSearch>
-          <SearchInput
-            onChange={this.handleChangeInput}
-            value={searchString}
-            type="text"
-            autocomplete="off"
-            placeholder="Search images and photos"
-          />
-        </Header>
-      </Searchbar>
-    );
-  }
-}
+  return (
+    <Searchbar>
+      <Header onSubmit={handleSubmit}>
+        <ButtonSearch type="submit">
+          <SVGComponent />
+        </ButtonSearch>
+        <SearchInput
+          onChange={handleChangeInput}
+          value={searchString}
+          type="text"
+          autocomplete="off"
+          placeholder="Search images and photos"
+        />
+      </Header>
+    </Searchbar>
+  );
+};
 
 Sesrchbar.propTypes = {
   onSubmit: PropTypes.func.isRequired,

@@ -1,40 +1,44 @@
-import { Component } from 'react';
+import { useRef } from 'react';
+import { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 const root = document.getElementById('modal');
-export class Modal extends Component {
-  closeModalBackdrop = event => {
+
+export const Modal = props => {
+  const overlay = useRef();
+
+  const closeModalBackdrop = event => {
     if (event.target === event.currentTarget) {
-      this.props.onModalClose();
+      props.onModalClose();
     }
   };
-  handlePressKey = event => {
+  const handlePressKey = event => {
     if (event.code === 'Escape') {
-      this.props.onModalClose();
+      props.onModalClose();
     }
   };
 
-  componentDidMount() {
-    document.addEventListener('keydown', this.handlePressKey);
-  }
+  useEffect(() => {
+    overlay.current.focus();
+  }, []);
 
-  componentWillUnmount() {
-    document.removeEventListener('keydown', this.handlePressKey);
-  }
-  render() {
-    const { children } = this.props;
-    return ReactDOM.createPortal(
-      <>
-        <ModalBackdrop onClick={this.closeModalBackdrop}>
-          <ModalBody>{children}</ModalBody>
-        </ModalBackdrop>
-      </>,
-      root
-    );
-  }
-}
+  const { children } = props;
+  return ReactDOM.createPortal(
+    <>
+      <ModalBackdrop
+        ref={overlay}
+        tabIndex={-1}
+        onKeyDown={handlePressKey}
+        onClick={closeModalBackdrop}
+      >
+        <ModalBody>{children}</ModalBody>
+      </ModalBackdrop>
+    </>,
+    root
+  );
+};
 
 Modal.propTypes = {
   onModalClose: PropTypes.func.isRequired,
