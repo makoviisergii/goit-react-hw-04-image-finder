@@ -21,6 +21,7 @@ export const App = () => {
   const [images, setImages] = useState([]);
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(0);
+  // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [status, setStatus] = useState(statusList.idle);
@@ -53,6 +54,7 @@ export const App = () => {
         setError(error);
         setStatus(statusList.error);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, page]);
 
   if (status === statusList.loading) {
